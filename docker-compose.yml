@@ -11,7 +11,7 @@ services:
     environment:
       - DEBUG=False
       - SECRET_KEY=your-secret-key-change-this-in-production
-      - ALLOWED_HOSTS=localhost,127.0.0.1,web,django-school-webapp.onrender.com
+      - ALLOWED_HOSTS=mywebsite.com, www.mywebsite.com
       - DJANGO_SETTINGS_MODULE=school.settings
       - SECURE_SSL_REDIRECT=False
       - SESSION_COOKIE_SECURE=False

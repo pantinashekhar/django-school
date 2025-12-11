@@ -201,8 +201,5 @@ LOGGING = {
         },
     },
 }
-
-import django_heroku
-django_heroku.settings(locals())
-
+# Static files storage using WhiteNoise
 STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
