@@ -1,0 +1,29 @@
+services:
+  web:
+    build: .
+    container_name: django-school
+    volumes:
+      - ./school:/app
+      - static_volume:/app/staticfiles
+      - media_volume:/app/media
+    ports:
+      - "8000:8000"
+    environment:
+      - DEBUG=False
+      - SECRET_KEY=your-secret-key-change-this-in-production
+      - ALLOWED_HOSTS=localhost,127.0.0.1,web,django-school-webapp.onrender.com
+      - DJANGO_SETTINGS_MODULE=school.settings
+      - SECURE_SSL_REDIRECT=False
+      - SESSION_COOKIE_SECURE=False
+      - CSRF_COOKIE_SECURE=False
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/admin/"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+volumes:
+  static_volume:
+  media_volume:
