@@ -35,5 +35,6 @@ RUN mkdir -p /app/staticfiles /app/logs /app/media
 EXPOSE 8000
 
 # start gunicorn
-CMD ["gunicorn", "school.wsgi:application", "--bind", "0.0.0.0:8000"]
+CMD ["gunicorn", "school.wsgi:application", "--bind", "0.0.0.0:8000", "--workers", "1"]
+
 
