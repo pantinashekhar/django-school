@@ -1,66 +1,17 @@
 services:
-  db:
-    image: mysql:8.0
-    container_name: django-school-mysql
-    environment:
-      - MYSQL_ROOT_PASSWORD=Krishna123
-      - MYSQL_DATABASE=school_db
-      # Do not set MYSQL_USER to 'root' (MySQL image treats MYSQL_USER as regular user)
-      # The root user password is controlled via MYSQL_ROOT_PASSWORD only
-    volumes:
-      - db_volume:/var/lib/mysql
-    ports:
-      - "3306:3306"
-    healthcheck:
-      # Use CMD-SHELL so we can reference the MYSQL_ROOT_PASSWORD env var
-      test: ["CMD-SHELL", "mysqladmin ping -h localhost -uroot -p$MYSQL_ROOT_PASSWORD >/dev/null 2>&1 || exit 1"]
-      interval: 10s
-      timeout: 5s
-      retries: 10
-    networks:
-      - web-network
-    restart: unless-stopped
-
   web:
     build: .
     container_name: django-school-prod
-    depends_on:
-      db:
-        condition: service_healthy
-    volumes:
-      - ./school:/app
-      - static_volume:/app/staticfiles
-      - media_volume:/app/media
-      - logs_volume:/app/logs
+    command: >
+      sh -c "
+      python school/manage.py migrate --noinput &&
+      python school/manage.py collectstatic --noinput &&
+      gunicorn config.wsgi:application --bind 0.0.0.0:8000
+      "
     ports:
       - "8000:8000"
     environment:
-      - DEBUG=False
-      - SECRET_KEY='django-insecure-*&if_30_o1ibo%%i0o!^a6gtz0#1g@-#&eknb8v+lt&ei3oc0j'
-      - ALLOWED_HOSTS=localhost,127.0.0.1,web,django-school-webapp.onrender.com
-      - DJANGO_SETTINGS_MODULE=school.settings
-      - DB_ENGINE=mysql
-      - DB_NAME=school_db
-      - DB_USER=root
-      - DB_PASSWORD=Krishna123
-      - DB_HOST=db
-      - DB_PORT=3306
-      - SECURE_SSL_REDIRECT=False
-      - SESSION_COOKIE_SECURE=False
-      - CSRF_COOKIE_SECURE=False
-      - DJANGO_LOG_LEVEL=INFO
+      DEBUG: "False"
+      DJANGO_SETTINGS_MODULE: config.settings
+      PYTHONPATH: /app/school
     restart: always
-    # Healthcheck disabled - gunicorn is running and app is accessible
-    # If needed, monitor via: docker-compose logs web
-    networks:
-      - web-network
-
-volumes:
-  db_volume:
-  static_volume:
-  media_volume:
-  logs_volume:
-
-networks:
-  web-network:
-    driver: bridge

@@ -1,38 +1,26 @@
-# Use official Python runtime as base image
 FROM python:3.11-slim
 
-# Set environment variables
-ENV PYTHONUNBUFFERED=1 \
-    PYTHONDONTWRITEBYTECODE=1 \
-    PIP_NO_CACHE_DIR=1
-
-# Set work directory
-WORKDIR /app
-
-# Install system dependencies (including MySQL client and dev headers for mysqlclient)
-RUN apt-get update && apt-get install -y --no-install-recommends \
-    gcc \
-    pkg-config \
-    default-mysql-client \
+# System deps for mysqlclient
+RUN apt-get update && apt-get install -y \
+    build-essential \
     default-libmysqlclient-dev \
-    bash \
+    pkg-config \
     && rm -rf /var/lib/apt/lists/*
 
-# Copy requirements first for better caching
+WORKDIR /app
+
 COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
 
-# Install Python dependencies
-RUN pip install --upgrade pip && \
-    pip install -r requirements.txt
+# Copy entire repo
+COPY . /app
 
-# Copy project
-COPY school/ .
+# 🔑 THIS IS THE KEY FIX
+ENV PYTHONPATH=/app/school
+ENV DJANGO_SETTINGS_MODULE=config.settings
 
-# Create necessary directories
-RUN mkdir -p /app/staticfiles /app/logs /app/media
-
-# Expose port
-EXPOSE 8000
-
-# Run migrations, collect static files, and start gunicorn
-CMD bash -c "python manage.py migrate && python manage.py collectstatic --noinput --clear && gunicorn --bind 0.0.0.0:8000 --workers 4 --timeout 120 school.wsgi:application"
+CMD gunicorn config.wsgi:application \
+    --bind 0.0.0.0:$PORT \
+    --workers 1 \
+    --threads 2 \
+    --timeout 120

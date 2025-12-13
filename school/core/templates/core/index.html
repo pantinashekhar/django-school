@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="relative overflow-hidden bg-white">
+  <div class="pb-80 pt-16 sm:pb-40 sm:pt-24 lg:pb-48 lg:pt-40">
+    <div class="relative mx-auto max-w-7xl px-4 sm:static sm:px-6 lg:px-8">
+      <div class="sm:max-w-lg">
+        <h1 class="font text-4xl font-bold tracking-tight text-gray-900 sm:text-6xl">
+          School Management Evolved
+        </h1>
+        <p class="mt-4 text-xl text-gray-500">
+          A fully adaptable, SaaS-ready platform for managing students, grades, and fees with ease.
+        </p>
+      </div>
+      <div class="mt-10">
+        {% if user.is_authenticated %}
+            <a href="{% url 'core:dashboard' %}" class="inline-block rounded-md border border-transparent bg-blue-600 px-8 py-3 text-center font-medium text-white hover:bg-blue-700">
+                Go to Dashboard
+            </a>
+        {% else %}
+            <a href="{% url 'login' %}" class="inline-block rounded-md border border-transparent bg-blue-600 px-8 py-3 text-center font-medium text-white hover:bg-blue-700">
+                Log In
+            </a>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

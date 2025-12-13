@@ -27,8 +27,7 @@ SECRET_KEY = os.environ.get('SECRET_KEY', 'django-insecure-*&if_30_o1ibo%%i0o!^a
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.environ.get('DEBUG', 'False') == 'True'
 
-ALLOWED_HOSTS = os.environ.get('ALLOWED_HOSTS', 'localhost,127.0.0.1').split(',')
-
+ALLOWED_HOSTS = ["*"]
 
 # Application definition
 
@@ -39,8 +38,14 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.humanize',
     'rest_framework',
     'core',
+    'crispy_forms',
+    'crispy_tailwind',
+    'django_htmx',
+    'academics',
+    'users',
 ]
 
 MIDDLEWARE = [
@@ -53,7 +58,7 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-ROOT_URLCONF = 'school.urls'
+ROOT_URLCONF = 'config.urls'
 
 TEMPLATES = [
     {
@@ -70,7 +75,7 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'school.wsgi.application'
+WSGI_APPLICATION = 'config.wsgi.application'
 
 
 # Database
@@ -79,30 +84,16 @@ WSGI_APPLICATION = 'school.wsgi.application'
 # Detect database engine based on environment
 DB_ENGINE = os.environ.get('DB_ENGINE', 'sqlite3')
 
-if DB_ENGINE == 'mysql':
-    DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.mysql',
-            'NAME': os.environ.get('DB_NAME', 'school_db'),
-            'USER': os.environ.get('DB_USER', 'root'),
-            'PASSWORD': os.environ.get('DB_PASSWORD', ''),
-            'HOST': os.environ.get('DB_HOST', 'localhost'),
-            'PORT': os.environ.get('DB_PORT', '3306'),
-            'OPTIONS': {
-                'init_command': "SET sql_mode='STRICT_TRANS_TABLES'",
-                'charset': 'utf8mb4',
-            },
-            'CONN_MAX_AGE': 600,
-        }
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'school_db',
+        'USER': 'root',           # Replace with your MySQL username
+        'PASSWORD':'Krishna123', # Replace with your MySQL password
+        'HOST': '127.0.0.1',      # Localhost
+        'PORT': '3306',
     }
-else:
-    # Default to SQLite for development
-    DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.sqlite3',
-            'NAME': BASE_DIR / 'db.sqlite3',
-        }
-    }
+}
 
 
 # Password validation
@@ -154,6 +145,11 @@ SECURE_BROWSER_XSS_FILTER = True
 SECURE_CONTENT_SECURITY_POLICY = {
     'default-src': ("'self'",),
 }
+SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
+CSRF_TRUSTED_ORIGINS = [
+    "https://*.herokuapp.com"
+]
+
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
@@ -201,8 +197,20 @@ LOGGING = {
         },
     },
 }
-
-import django_heroku
-django_heroku.settings(locals())
-
+# Static files storage using WhiteNoise
 STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
+
+# src/config/settings.py
+
+# Where to send the user if they aren't logged in
+LOGIN_URL = 'login' 
+
+# Where to go after a successful login
+LOGIN_REDIRECT_URL = 'core:dashboard'
+
+# Where to go after logout
+LOGOUT_REDIRECT_URL = 'core:index'
+
+CRISPY_ALLOWED_TEMPLATE_PACKS = "tailwind" 
+CRISPY_TEMPLATE_PACK = "tailwind"
+
