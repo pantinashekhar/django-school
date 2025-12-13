@@ -17,9 +17,9 @@ COPY . /app
 
 # 🔑 THIS IS THE KEY FIX
 ENV PYTHONPATH=/app/school
-ENV DJANGO_SETTINGS_MODULE=school.settings
+ENV DJANGO_SETTINGS_MODULE=config.settings
 
-CMD gunicorn school.wsgi:application \
+CMD gunicorn config.wsgi:application \
     --bind 0.0.0.0:$PORT \
     --workers 1 \
     --threads 2 \
