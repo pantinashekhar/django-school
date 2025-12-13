@@ -40,6 +40,11 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework',
     'core',
+    'crispy_forms',
+    'crispy_tailwind',
+    'django_htmx',
+    'academics',
+    'users',
 ]
 
 MIDDLEWARE = [
@@ -52,7 +57,7 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-ROOT_URLCONF = 'school.urls'
+ROOT_URLCONF = 'config.urls'
 
 TEMPLATES = [
     {
@@ -69,7 +74,7 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'school.wsgi.application'
+WSGI_APPLICATION = 'config.wsgi.application'
 
 
 # Database
@@ -207,3 +212,18 @@ LOGGING = {
 }
 # Static files storage using WhiteNoise
 STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
+
+# src/config/settings.py
+
+# Where to send the user if they aren't logged in
+LOGIN_URL = 'login' 
+
+# Where to go after a successful login
+LOGIN_REDIRECT_URL = 'core:dashboard'
+
+# Where to go after logout
+LOGOUT_REDIRECT_URL = 'core:index'
+
+CRISPY_ALLOWED_TEMPLATE_PACKS = "tailwind" 
+CRISPY_TEMPLATE_PACK = "tailwind"
+

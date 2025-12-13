@@ -14,17 +14,22 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
-from django.conf import settings
-from django.conf.urls.static import static
+# src/config/urls.py
 from django.contrib import admin
 from django.urls import path, include
+from django.views.generic import RedirectView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('api/', include("core.urls")),
-]
+    
+    # 1. Connect the Auth system (Fixes /accounts/login/ 404)
+    path('accounts/', include('django.contrib.auth.urls')),
+    
+    # 2. Connect your Core app (Fixes /dashboard 404)
+    # We leave the prefix empty "" so the core handles root '/' and '/dashboard'
+    path('', include('core.urls', namespace='core')),
 
-# Serve static files in development
-if settings.DEBUG:
-    urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
-    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+    path('academics/', include('academics.urls', namespace='academics')),
+
+    path('accounts', RedirectView.as_view(url='/accounts/login/', permanent=True)), 
+]

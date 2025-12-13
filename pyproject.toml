@@ -1,0 +1,18 @@
+[project]
+name = "django-school"
+version = "0.1.0"
+description = "Django School Project"
+authors = [
+    {name = "Chandrashekhar Pantina",email = "pantinashekhar87@gmail.com"}
+]
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+    "celery (>=5.6.0,<6.0.0)",
+    "redis (>=7.1.0,<8.0.0)"
+]
+
+
+[build-system]
+requires = ["poetry-core>=2.0.0,<3.0.0"]
+build-backend = "poetry.core.masonry.api"
