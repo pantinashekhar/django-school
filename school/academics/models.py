@@ -16,6 +16,7 @@ class Student(models.Model):
     class Meta:
         verbose_name = "Student"
         verbose_name_plural = "Students"
+        ordering = ['-enrollment_date', '-id']
 
 class Grade(models.Model):
     # --- THESE LINES MUST BE INDENTED ---

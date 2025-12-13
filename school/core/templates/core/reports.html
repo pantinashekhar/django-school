@@ -57,6 +57,15 @@
 {{ labels|json_script:"chart-labels" }}
 {{ data|json_script:"chart-data" }}
 
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const labels = JSON.parse(document.getElementById('chart-labels').textContent);
+        const data = JSON.parse(document.getElementById('chart-data').textContent);
+
+        // ... Chart.js initialization code ...
+    });
+</script>
+
 <!-- Chart.js Script -->
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>

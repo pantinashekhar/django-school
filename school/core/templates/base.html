@@ -7,7 +7,9 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/htmx.org@1.9.10"></script>
 </head>
-<body class="bg-gray-100 text-gray-900 font-sans antialiased">
+<!-- We add hx-headers so HTMX automatically sends the security token -->
+<body class="bg-gray-100 text-gray-900 font-sans antialiased" 
+      hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'>
     <nav class="bg-white shadow p-4 mb-6 flex justify-between">
         <a href="/" class="font-bold text-xl text-blue-600">SchoolSaaS</a>
         <div>
