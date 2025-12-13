@@ -10,13 +10,17 @@ RUN apt-get update && apt-get install -y \
 WORKDIR /app
 
 COPY requirements.txt .
-
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Copy project correctly
+# Copy entire repo
 COPY . /app
 
-# Django environment variable
+# 🔑 THIS IS THE KEY FIX
+ENV PYTHONPATH=/app/school
 ENV DJANGO_SETTINGS_MODULE=school.settings
 
-CMD ["gunicorn", "school.wsgi:application", "--bind", "0.0.0.0:8000"]
+CMD gunicorn school.wsgi:application \
+    --bind 0.0.0.0:$PORT \
+    --workers 1 \
+    --threads 2 \
+    --timeout 120
