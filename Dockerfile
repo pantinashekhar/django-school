@@ -1,41 +1,22 @@
-# Use official Python runtime as base image
 FROM python:3.11-slim
 
-# Set environment variables
-ENV PYTHONUNBUFFERED=1 \
-    PYTHONDONTWRITEBYTECODE=1 \
-    PIP_NO_CACHE_DIR=1
-
-# Set work directory
-WORKDIR /app
-
-# Install system dependencies (including MySQL client and dev headers for mysqlclient)
-RUN apt-get update && apt-get install -y --no-install-recommends \
-    gcc \
-    pkg-config \
-    default-mysql-client \
+# System deps for mysqlclient
+RUN apt-get update && apt-get install -y \
+    build-essential \
     default-libmysqlclient-dev \
-    bash \
+    pkg-config \
     && rm -rf /var/lib/apt/lists/*
 
-# Copy requirements first for better caching
+WORKDIR /app
+
 COPY requirements.txt .
 
-# Install Python dependencies
-RUN pip install --upgrade pip && \
-    pip install -r requirements.txt
+RUN pip install --no-cache-dir -r requirements.txt
 
-# Copy project
-COPY school/ .
+# Copy project correctly
+COPY . /app
 
-# Create necessary directories
-RUN mkdir -p /app/staticfiles /app/logs /app/media
+# Django environment variable
+ENV DJANGO_SETTINGS_MODULE=school.settings
 
-# Expose port
-EXPOSE 8000
-
-# start gunicorn
-CMD ["sh", "-c", "gunicorn school.wsgi:application --bind 0.0.0.0:$PORT --workers 1"]
-
-
-
+CMD ["gunicorn", "school.wsgi:application", "--bind", "0.0.0.0:8000"]
