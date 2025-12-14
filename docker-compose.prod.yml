@@ -2,16 +2,30 @@ services:
   web:
     build: .
     container_name: django-school-prod
-    command: >
-      sh -c "
-      python school/manage.py migrate --noinput &&
-      python school/manage.py collectstatic --noinput &&
-      gunicorn config.wsgi:application --bind 0.0.0.0:8000
-      "
+    command: gunicorn config.wsgi:application --bind 0.0.0.0:8000
+    volumes:
+      - ./school:/app
     ports:
       - "8000:8000"
     environment:
-      DEBUG: "False"
-      DJANGO_SETTINGS_MODULE: config.settings
-      PYTHONPATH: /app/school
+      - DEBUG=0
+      - DB_HOST=db
+      - DB_NAME=school_db
+      - DB_USER=root
+      - DB_PASSWORD=Krishna123
+    depends_on:
+      - db
+
+  # YOU MUST HAVE THIS DATABASE SERVICE
+  db:
+    image: mysql:8.0
+    container_name: school-db-prod
     restart: always
+    environment:
+      MYSQL_DATABASE: school_db
+      MYSQL_ROOT_PASSWORD: Krishna123
+    volumes:
+      - mysql_data:/var/lib/mysql
+
+volumes:
+  mysql_data:
