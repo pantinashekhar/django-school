@@ -18,6 +18,10 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 from django.views.generic import RedirectView
+from drf_spectacular.views import SpectacularAPIView, SpectacularSwaggerView
+from django.conf import settings
+from django.conf.urls.static import static
+
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -32,4 +36,17 @@ urlpatterns = [
     path('academics/', include('academics.urls', namespace='academics')),
 
     path('accounts', RedirectView.as_view(url='/accounts/login/', permanent=True)), 
+    path("api/v1/accounts/", include("accounts.api.urls", namespace="accounts_api")),
+
+    path("api/schema/", SpectacularAPIView.as_view(), name="schema"),
+    path(
+        "api/docs/",
+        SpectacularSwaggerView.as_view(url_name="schema"),
+        name="swagger-ui",
+    ),
+    path("api/v1/core/", include("core.api.urls", namespace="core_api")),
+    path("api/v1/academics/", include("academics.api.urls", namespace="academics_api")),
 ]
+
+if settings.DEBUG:
+    urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

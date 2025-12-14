@@ -17,6 +17,9 @@ from pathlib import Path
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+STATIC_URL = "static/"
+STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
+
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
@@ -25,8 +28,8 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = os.environ.get('SECRET_KEY', 'django-insecure-*&if_30_o1ibo%%i0o!^a6gtz0#1g@-#&eknb8v+lt&ei3oc0j')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = os.environ.get('DEBUG', 'False') == 'True'
-
+# DEBUG = os.environ.get('DEBUG', 'False') == 'True'
+DEBUG = False
 ALLOWED_HOSTS = ["*"]
 
 # Application definition
@@ -46,7 +49,11 @@ INSTALLED_APPS = [
     'django_htmx',
     'academics',
     'users',
+    'drf_spectacular',
+    'drf_spectacular_sidecar',
+    'rest_framework.authtoken',
 ]
+
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -74,6 +81,25 @@ TEMPLATES = [
         },
     },
 ]
+
+REST_FRAMEWORK = {
+    "DEFAULT_AUTHENTICATION_CLASSES": [
+        "rest_framework.authentication.TokenAuthentication",
+        "rest_framework.authentication.SessionAuthentication",
+    ],
+    "DEFAULT_SCHEMA_CLASS": "drf_spectacular.openapi.AutoSchema",
+}
+
+SPECTACULAR_SETTINGS = {
+    "TITLE": "Django School API",
+    "VERSION": "1.0.0",
+    "SWAGGER_UI_DIST": "SIDECAR",
+    "SWAGGER_UI_FAVICON_HREF": "SIDECAR",
+    "REDOC_DIST": "SIDECAR",
+}
+
+
+
 
 WSGI_APPLICATION = 'config.wsgi.application'
 
@@ -209,4 +235,5 @@ LOGOUT_REDIRECT_URL = 'core:index'
 
 CRISPY_ALLOWED_TEMPLATE_PACKS = "tailwind" 
 CRISPY_TEMPLATE_PACK = "tailwind"
+
 

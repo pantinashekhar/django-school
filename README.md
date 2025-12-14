@@ -8,10 +8,9 @@ Step 3. pip install -r requirements.txt
 
 Step 4. To test API functionality 
         - python manage.py runserver
-        - Admin: http://localhost:8000/admin/
-        - Core app views: http://localhost:8000/api/student/add-form
-        -                 http://localhost:8000/api/courses/add-form
-        -                 http://localhost:8000/api/enroll
+        - local: http://localhost:8000/api/docs
+        - prod: https://django-school-web-app-7aed3231800e.herokuapp.com/api/docs
+        
         
         
         
