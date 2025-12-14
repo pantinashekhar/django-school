@@ -1,5 +1,5 @@
 from django.db import models
-from django.utils import timezone
+import datetime
 
 class Student(models.Model):
     # --- THESE LINES MUST BE INDENTED ---
@@ -7,7 +7,7 @@ class Student(models.Model):
     last_name = models.CharField(max_length=100)
     email = models.EmailField(unique=True)
     date_of_birth = models.DateField()
-    enrollment_date = models.DateField(default=timezone.now)
+    enrollment_date = models.DateField(default=datetime.date.today)
     grade_level = models.IntegerField(default=1, help_text="e.g. 1-12")
     
     def __str__(self):
