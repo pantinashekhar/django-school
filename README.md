@@ -8,8 +8,8 @@ Step 3. pip install -r requirements.txt
 
 Step 4. To test API functionality 
         - python manage.py runserver
-        - Admin(local): http://localhost:8000/accounts/login
-        - Admin(prod): https://django-school-web-app-7aed3231800e.herokuapp.com/
+        - local: http://localhost:8000/api/docs
+        - prod: https://django-school-web-app-7aed3231800e.herokuapp.com/api/docs
         
         
         
