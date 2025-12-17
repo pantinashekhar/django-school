@@ -1,6 +1,6 @@
 from django.urls import path
 from . import views
-from .views import ReportsView, DashboardView, IndexView, UniversalDeleteView
+from .views import ReportsView, DashboardView, IndexView, UniversalDeleteView,TemplateView
 # Namespacing is critical for large SaaS apps
 app_name = "core"
 
@@ -23,4 +23,6 @@ urlpatterns = [
         views.UniversalDeleteView.as_view(), 
         name="universal-delete"
     ),
+    path('keepalive/', TemplateView.as_view(template_name='keepalive.html'), name='keepalive'),
+
 ]
