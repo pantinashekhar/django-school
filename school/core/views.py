@@ -12,7 +12,9 @@ from django.views.generic import TemplateView
 from django.contrib.auth.mixins import LoginRequiredMixin
 # Import your models dynamically to avoid circular imports if possible, 
 # or import them directly if structure allows.
-from academics.models import Student
+from .models import Student,Enrollment
+from rest_framework import generics
+from .serializers import EnrollmentSerializer
 
 class AdaptableCRUDBase:
     """
@@ -126,3 +128,17 @@ class ReportsView(LoginRequiredMixin, TemplateView):
         context['data'] = [item['total'] for item in stats]
         
         return context
+    
+class EnrollmentListView(generics.ListAPIView):
+    serializer_class = EnrollmentSerializer
+
+    def get_queryset(self):
+        queryset = Enrollment.objects.all()
+        student_id = self.request.query_params.get('student_id')
+        course_id = self.request.query_params.get('course_id')
+        
+        if student_id:
+            queryset = queryset.filter(student__id=student_id)
+        if course_id:
+            queryset = queryset.filter(course__id=course_id)
+        return queryset

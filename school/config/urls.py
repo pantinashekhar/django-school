@@ -21,7 +21,7 @@ from django.views.generic import RedirectView
 from drf_spectacular.views import SpectacularAPIView, SpectacularSwaggerView , SpectacularRedocView
 from django.conf import settings
 from django.conf.urls.static import static
-
+from core.views import EnrollmentListView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -37,6 +37,7 @@ urlpatterns = [
 
     path('accounts', RedirectView.as_view(url='/accounts/login/', permanent=True)), 
     path("api/v1/accounts/", include("accounts.api.urls", namespace="accounts_api")),
+    path('api/enrollments/', EnrollmentListView.as_view(), name='enrollment-api'),
 
     path("api/schema/", SpectacularAPIView.as_view(), name="schema"),
     path(
